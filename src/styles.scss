@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+.example-element-description p {
+  display: inline-block;
+  margin: 0;
+  padding-right: 1rem;
+}
+.example-element-description p:last-child {
+  padding-right: 0;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: white;
+}
+
+.mat-row:nth-child(even) {
+  background-color: slateblue;
+}
+
+mat-row.example-detail-row {
+  height: 0px;
+}
+
+mat-row.example-detail-row.expanded {
+  height: auto !important;
+}
+
+.example-element-description {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

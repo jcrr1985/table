@@ -1,0 +1,53 @@
+<mat-table [dataSource]="transactions" multiTemplateDataRows>
+  <!-- Columnas -->
+  <ng-container matColumnDef="entidad">
+    <mat-header-cell *matHeaderCellDef>Entidad</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.entidad }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="ingresos">
+    <mat-header-cell *matHeaderCellDef>Ingresos</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ formatNumberWithCommas(row.ingresos) }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="egresos">
+    <mat-header-cell *matHeaderCellDef>Egresos</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ formatNumberWithCommas(row.egresos) }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ formatNumberWithCommas(row.ingresos - row.egresos) }}
+    </mat-cell>
+  </ng-container>
+  <!-- Celdas ocultas para mostrar detalles de la transacción al hacer click -->
+  <ng-container matColumnDef="hidden">
+    <div *matCellDef="let row" [style.display]="expandedElement === row ? 'table-cell' : 'none'">
+      <div [@detailExpand]="expandedElement === row ? 'expanded' : 'collapsed'">
+        <div class="example-element-description">
+          <table>
+            <thead>
+              <tr>
+                <th>Operacion</th>
+                <th>Ingresos</th>
+                <th>Egresos</th>
+                <th>Monto</th>
+              </tr>
+            </thead>
+            <tbody style="text-align: center;">
+              <tr *ngFor="let op of row.operacion">
+                <td>{{ op.tipo }}</td>
+                <td>{{ formatNumberWithCommas(op.ingresos) }}</td>
+                <td>{{ formatNumberWithCommas(op.egresos) }}</td>
+                <td>{{ formatNumberWithCommas(op.ingresos - op.egresos) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
+    [class.example-expanded-row]="expandedElement === row"
+    (click)="expandedElement = expandedElement === row ? null : row">
+  </mat-row>
+  <mat-row *matRowDef="let row; columns: ['hidden']" [class.example-detail-row]="expandedElement === row"></mat-row>
+</mat-table>

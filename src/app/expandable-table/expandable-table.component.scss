@@ -1,0 +1,30 @@
+.example-element-row:nth-child(even) {
+  background-color: #cfdfee;
+}
+
+.example-element-row:nth-child(odd) {
+  background-color: #deadd5;
+}
+
+.mat-cell,
+.mat-header-cell {
+  font-weight: bold;
+}
+
+.example-element-description {
+  color: #717f92;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
+.example-detail-row{
+  display: grid;
+}
+
+
+.mat-mdc-row.ng-star-inserted:not(.example-detail-row):not(.example-element-row) {
+  display: none;
+}
