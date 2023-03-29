@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Detalles de la operación</h2>
+<div mat-dialog-content>
+  <table class="tabla-detalle-modal">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Cod Mov</th>
+        <th>RUT</th>
+        <th>Nombre</th>
+        <th>Subrut</th>
+        <th>Monto Op</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detalle of detalleOperacion; let i = index">
+        <label>
+          <input type="checkbox" (change)="onCheckboxChange($event, detalle, i)">
+        </label>
+        <td>{{ detalle.codMovimiento }}</td>
+        <td>{{ detalle.rut }}</td>
+        <td>{{ detalle.nombre }}</td>
+        <td>{{ detalle.subrut }}</td>
+        <td>{{ detalle.montoOperacion }}</td>
+      </tr>
+      <tr>
+        <td>TOTAL</td>
+        <td>{{total}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div mat-dialog-actions class="mat-dialog-actions">
+  <button mat-button (click)="onNoClick()">Aceptar</button>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+
+</div>

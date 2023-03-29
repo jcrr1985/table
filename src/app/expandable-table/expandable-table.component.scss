@@ -1,3 +1,11 @@
+mat-cell, td{
+  border:2px solid #fff;
+}
+
+mat-header-row{
+  background-color:steelblue
+}
+
 .example-element-row:nth-child(even) {
   background-color: #cfdfee;
 }
@@ -9,6 +17,7 @@
 .mat-cell,
 .mat-header-cell {
   font-weight: bold;
+
 }
 
 .example-element-description {
@@ -27,4 +36,11 @@
 
 .mat-mdc-row.ng-star-inserted:not(.example-detail-row):not(.example-element-row) {
   display: none;
+}
+
+.total-row{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  text-align: center;
+  background-color:steelblue
 }
