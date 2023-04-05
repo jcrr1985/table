@@ -1,9 +1,12 @@
-mat-cell, td{
-  border:2px solid #fff;
+mat-cell,
+td {
+  white-space: nowrap;
+  border: 2px solid #fff;
+  padding: 0 70px 0 10px;
 }
 
-mat-header-row{
-  background-color:steelblue
+mat-header-row {
+  background-color: steelblue
 }
 
 .example-element-row:nth-child(even) {
@@ -29,7 +32,7 @@ mat-header-row{
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 }
 
-.example-detail-row{
+.example-detail-row {
   display: grid;
 }
 
@@ -38,9 +41,38 @@ mat-header-row{
   display: none;
 }
 
-.total-row{
+.total-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   text-align: center;
-  background-color:steelblue
+  background-color: rgb(83, 127, 191)
+}
+
+.top-wrapper {
+  text-align: center;
+
+
+  .neteo-table-wrapper {
+    background-color: rgb(83, 127, 191);
+    padding: 2px;
+    display: inline-block;
+    height: 116px;
+
+    .tabla-neteo {
+      margin-top: -30px;
+    }
+
+    .titulo-section {
+      position: relative;
+      top: -30px;
+      background-color: #000;
+      display: flex;
+      justify-content: space-around;
+
+      h3 {
+        color: #fff;
+      }
+    }
+  }
+
 }

@@ -1,0 +1,44 @@
+<form>
+<div class="fila-superior">
+    <mat-form-field appearance="fill">
+      <mat-label>Origen</mat-label>
+      <mat-select [(ngModel)]="origen" [name]="'food'">
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Contraparte</mat-label>
+      <mat-select [(ngModel)]="contraparte" [name]="'food'">
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+</div>
+<div class="fila-inferior">
+    <mat-form-field appearance="fill">
+      <mat-label>Moneda</mat-label>
+      <mat-select [(ngModel)]="selectedCurrency" [name]="'currency'" (selectionChange)="emitNewCurrency()">
+        <mat-option *ngFor="let currency of currencies" [value]="currency.value">
+          {{currency.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="datepicker" >
+      <input matInput [matDatepicker]="picker" placeholder="Fecha">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="datepicker" (click)="actualizar()">
+      <input matInput appearance="fill" placeholder="Actualizar info">
+      <mat-icon class="actualizar-info">redo</mat-icon>
+    </mat-form-field>
+    <mat-form-field class="datepicker">
+      <input matInput appearance="fill" placeholder="Netear">
+    </mat-form-field>
+</div>
+</form>
+
+

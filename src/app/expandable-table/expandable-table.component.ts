@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Inject, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Injectable, Inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { DetalleOperacion, Operacion, Transaction } from '../interfaces/IexpandableTable';
-import { DummyServiceService } from '../dummy-service.service';
+import { ExportService } from '../services/export.service';
 
 @Component({
   selector: 'app-expandable-table',
@@ -19,23 +18,19 @@ import { DummyServiceService } from '../dummy-service.service';
   ],
 })
 
-export class ExpandableTableComponent implements OnInit {
+export class ExpandableTableComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['select', 'entidad', 'ingresos', 'egresos', 'total'];
   expandedElement: Transaction | null = null;
   checkboxState: boolean[] = [];
-  selected: boolean[] = [];
-  // transactions: Transaction[] = [];
-
-
-  constructor(public dialog: MatDialog, private dummyService: DummyServiceService ) { }
-
+  selected: any[] = [];
+  selectedDetail: any[] = [];
   transactions: Transaction[] = [
     {
       fondoName: 'FM IFI DEDR FUND CRE',
       operaciones: [
         {
-          opName: 'Rescates',
+          opName: 'Rescate',
           opData: [
             {
               codMovimiento: 1,
@@ -59,45 +54,45 @@ export class ExpandableTableComponent implements OnInit {
       fondoName: 'FM Inv Small Cap',
       operaciones: [
         {
-          opName: 'Abono FM',
+          opName: 'Abono X',
           opData: [
             {
               codMovimiento: 3,
               rut: '12345678',
-              nombre: 'Juan Perez',
+              nombre: 'Anna Katun',
               subrut: 123456,
               montoOperacion: 1000000
             },
             {
               codMovimiento: 4,
               rut: '56789012-3',
-              nombre: 'Pedro Rodriguez',
+              nombre: 'Jaime Antonio Guajardo Rojas',
               subrut: 345678,
               montoOperacion: 1000000
             }
           ]
         },
         {
-          opName: 'Rescates',
+          opName: 'Rescate',
           opData: [
             {
               codMovimiento: 5,
               rut: '12345678',
-              nombre: 'Juan Perez',
+              nombre: 'Berta Valenzuela Gonzáles',
               subrut: 123456,
               montoOperacion: 500000
             },
             {
               codMovimiento: 6,
               rut: '56789012-3',
-              nombre: 'Pedro Rodriguez',
+              nombre: 'Dolores O\'Riordan',
               subrut: 345678,
               montoOperacion: 500000
             }
           ]
         },
         {
-          opName: 'Compras DPD',
+          opName: 'Abono X',
           opData: [
             {
               codMovimiento: 3,
@@ -109,7 +104,7 @@ export class ExpandableTableComponent implements OnInit {
             {
               codMovimiento: 4,
               rut: '56789012-3',
-              nombre: 'Pedro Rodriguez',
+              nombre: 'Sarah ELena Vega Barrios',
               subrut: 345678,
               montoOperacion: 200000
             }
@@ -118,30 +113,32 @@ export class ExpandableTableComponent implements OnInit {
       ]
     },
   ];
+  currency: string | undefined = undefined;
+  public totalTotal = 0
 
+  constructor(public dialog: MatDialog, private exportService: ExportService) { }
 
   ngOnInit(): void {
-    this.dummyService.transactions$.subscribe((data: Transaction[]) => {
-      console.log('data', data)
-      this.transactions = data;
-    });
   }
 
+  ngAfterViewInit(): void {
+  }
   public formatNumberWithCommas(num: number | undefined, maximumFractionDigits = 2): string {
     if (typeof num !== 'number') {
       return '-';
     }
 
-    return num.toLocaleString(undefined, {
+    const formattedNum = (num * this.factor).toLocaleString(undefined, {
       useGrouping: true,
       maximumFractionDigits: maximumFractionDigits,
     });
+    return formattedNum;
   }
 
   public getTotalOperaciones(operaciones: Operacion[], tipo: string): number {
     let totalIngresos = 0;
     let totalEgresos = 0;
-
+    let totaltotal = 0
 
     operaciones.forEach(op => {
       op.opData.forEach(detalle => {
@@ -153,6 +150,8 @@ export class ExpandableTableComponent implements OnInit {
       });
     });
 
+    totaltotal = totalEgresos - totalIngresos;
+    this.totalTotal = totaltotal;
     return tipo === 'ingresos' ? totalIngresos : totalEgresos;
   }
 
@@ -161,13 +160,25 @@ export class ExpandableTableComponent implements OnInit {
     console.log('detalle', detalle)
   }
 
-  public toggleSelect(el: any): void {
-    const selectedIndex = this.selected.indexOf(el);
+  public toggleSelect(row: any): void {
+    console.log('Operaciones', row.operaciones)
+    const selectedIndex = this.selected.indexOf(row);
 
     if (selectedIndex === -1) {
-      this.selected.push(el);
+      this.selected.push(row);
     } else {
       this.selected.splice(selectedIndex, 1);
+    }
+  }
+
+  public toggleSelectDetail(op: any): void {
+    console.log('op of operaciones', op)
+    const selectedIndexDetail = this.selectedDetail.indexOf(op);
+
+    if (selectedIndexDetail === -1) {
+      this.selectedDetail.push(op);
+    } else {
+      this.selectedDetail.splice(selectedIndexDetail, 1);
     }
   }
 
@@ -188,6 +199,8 @@ export class ExpandableTableComponent implements OnInit {
 
 
   public openModal(detalleOperacion: DetalleOperacion[]): void {
+    console.log('detalleOperacion', detalleOperacion)
+
     this.dialog.open(ModalComponent, {
       data: detalleOperacion
     });
@@ -212,5 +225,45 @@ export class ExpandableTableComponent implements OnInit {
   public getTotal(transactions: Transaction[]): number {
     return this.getTotalIngresos(transactions) - this.getTotalEgresos(transactions);
   }
+  factor: number = 1;
+  getCurrency(currency: string) {
+    console.log('currency', currency)
+    this.currency = currency;
+    const tipoCambio = 0.0013;
+    const factor = 1;
+    if (currency === 'CLP') {
+      this.factor = 1;
+      return;
+    }
+    if (currency === 'USD') {
+      this.factor = tipoCambio;
+      return;
+    }
 
+  }
+
+  //datos anidados y no anidados de transactions en un solo nivel para exportar a excel
+  public flattenTransactions(transactions: Transaction[]): any[] {
+    const flattenedTransactions: any[] = [];
+    transactions.forEach(transaction => {
+      transaction.operaciones.forEach(operacion => {
+        operacion.opData.forEach(detalle => {
+          flattenedTransactions.push({
+            fondoName: transaction.fondoName,
+            opName: operacion.opName,
+            codMovimiento: detalle.codMovimiento,
+            rut: detalle.rut,
+            nombre: detalle.nombre,
+            subrut: detalle.subrut,
+            montoOperacion: detalle.montoOperacion,
+          });
+        });
+      });
+    });
+    return flattenedTransactions;
+  }
+
+  exportAsXlsx(): void {
+    this.exportService.exportToExcel(this.flattenTransactions(this.transactions), 'transacciones');
+  }
 }

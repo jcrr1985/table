@@ -23,7 +23,6 @@ export class ModalComponent implements OnInit {
     console.log('this.detalleOperacion', this.detalleOperacion)
   }
   ngOnInit(): void {
-    // this.total = this.detalleOperacion.reduce((a: any, b: any) => a + b.montoOperacion, 0);
   }
 
   public onNoClick(): void {
@@ -34,7 +33,7 @@ export class ModalComponent implements OnInit {
     event.stopPropagation();
     this.toggleCheckbox(index);
     this.toggleSelect(detalle);
-    console.log('selected', this.selected)
+    console.log('detalle en modal', this.selected)
     this.total = this.selected.reduce((a: any, b: any) => a + b.montoOperacion, 0);
 
   }
